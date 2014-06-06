@@ -1,0 +1,17 @@
+fixtures:
+  repositories:
+    stdlib:
+      repo: git://github.com/puppetlabs/puppetlabs-stdlib.git
+      ref: 4.2.1
+    concat:
+      repo: git://github.com/puppetlabs/puppetlabs-concat.git
+      ref: 1.1.0
+    firewall:
+      repo: git://github.com/puppetlabs/puppetlabs-firewall.git
+      ref: 1.1.1
+    gpg_key:
+      repo: git://github.com/treydock/puppet-gpg_key.git
+      ref: 0.0.3
+    atomic: git://github.com/treydock/puppet-atomic.git
+  symlinks:
+    ossec: "#{source_dir}"
