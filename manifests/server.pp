@@ -31,22 +31,25 @@ class ossec::server (
       $source_network = getvar("network_${interface}")
       $source_netmask = getvar("netmask_${interface}")
       $source         = "${source_network}/${source_netmask}"
-      $client_source  = getvar("ipaddress_${interface}")
+      $server_ip      = getvar("ipaddress_${interface}")
     } else {
       $iniface        = undef
       $source         = undef
       $client_source  = undef
     }
 
-    @@firewall { '100 allow OSSEC':
+    @@firewall { '100 allow OSSEC server':
       action  => 'accept',
       proto   => 'udp',
       dport   => $port,
-      source  => $client_source,
+      source  => $server_ip,
     }
 
-    Firewall <<| title == '100 allow OSSEC' |>> {
+    firewall { '100 allow OSSEC clients':
       ensure  => $firewall_ensure,
+      action  => 'accept',
+      proto   => 'udp',
+      dport   => $port,
       iniface => $iniface,
       source  => $source,
     }
@@ -85,7 +88,7 @@ class ossec::server (
     content   => template('ossec/server/ossec-agent.conf.erb'),
     require   => Package['ossec-hids-client'],
     notify    => Service['ossec-hids'],
-    tag       => 'ossec-agent.conf',
+    tag       => 'ossec::client',
   }
 
 }

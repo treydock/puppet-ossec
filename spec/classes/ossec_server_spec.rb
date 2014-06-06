@@ -16,16 +16,14 @@ describe 'ossec::server' do
   it { should contain_class('ossec') }
 
   it do
-    pending "no way to test exported resources" do
-      should contain_firewall('100 allow OSSEC').with({
-        :ensure   => 'present',
-        :action   => 'accept',
-        :proto    => 'udp',
-        :dport    => '1514',
-        :iniface  => 'eth0',
-        :source   => '192.168.1.0/255.255.255.0',
-      })
-    end        
+    should contain_firewall('100 allow OSSEC clients').with({
+      :ensure   => 'present',
+      :action   => 'accept',
+      :proto    => 'udp',
+      :dport    => '1514',
+      :iniface  => 'eth0',
+      :source   => '192.168.1.0/255.255.255.0',
+    })
   end
 
   it do

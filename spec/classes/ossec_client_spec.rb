@@ -14,7 +14,7 @@ describe 'ossec::client' do
 
   it do
     pending "no way to test collected resources" do
-      should contain_firewall('100 allow OSSEC').with({
+      should contain_firewall('100 allow OSSEC server').with({
         :ensure   => 'present',
         :action   => 'accept',
         :proto    => 'udp',

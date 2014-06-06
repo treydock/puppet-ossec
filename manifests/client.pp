@@ -17,9 +17,8 @@ class ossec::client (
   include ossec
 
   if $manage_firewall {
-    Firewall  <<| title == '100 allow OSSEC' |>> {
+    Firewall  <<| title == '100 allow OSSEC server' |>> {
       ensure  => $firewall_ensure,
-      iniface => undef,
     }
   }
 
@@ -37,6 +36,6 @@ class ossec::client (
     hasrestart  => $service_hasrestart,
   }
 
-  File <<| title == 'ossec-agent.conf' |>>
+  File <<| tag == 'ossec::client' |>>
 
 }
