@@ -53,7 +53,7 @@ class ossec::client (
     order   => '00',
   }
 
-  File <<| tag == 'ossec::client' |>>
+  Concat::Fragment <<| tag == 'ossec::client' |>>
 
   concat::fragment { 'ossec-agent.conf-repeated_offenders':
     target  => '/var/ossec/etc/ossec-agent.conf',
