@@ -1,0 +1,5 @@
+<% if ! @repeated_offenders.empty? -%>
+  <active-response>
+    <repeated_offenders><%= @repeated_offenders.join(",") %></repeated_offenders>
+  </active-response>
+<% end -%>

@@ -5,6 +5,7 @@ describe 'ossec::client' do
   let :facts do
     {
       :osfamily       => 'RedHat',
+      :concat_basedir => '/dne',
     }
   end
 
@@ -44,16 +45,48 @@ describe 'ossec::client' do
   end
 
   it do
+    should contain_concat('/var/ossec/etc/ossec-agent.conf').with({
+      :ensure   => 'present',
+      :owner    => 'root',
+      :group    => 'root',
+      :mode     => '0644',
+      :require  => 'Package[ossec-hids-client]',
+      :notify   => 'Service[ossec-hids]',
+    })
+  end
+
+  it do
+    should contain_concat__fragment('ossec-agent.conf-open').with({
+      :target   => '/var/ossec/etc/ossec-agent.conf',
+      :content  => "<ossec_config>\n",
+      :order    => '00',
+    })
+  end
+
+  it do
     pending "no way to test collected resources" do
-      should contain_file('/var/ossec/etc/ossec-agent.conf').with({
-        :ensure   => 'file',
-        :owner    => 'root',
-        :group    => 'root',
-        :mode     => '0644',
-        :require  => 'Package[ossec-hids-client]',
-        :notify   => 'Service[ossec-hids]',
+      should contain_concat__fragment('ossec-agent.conf-client').with({
+        :target   => '/var/ossec/etc/ossec-agent.conf',
+        :order    => '01',
+        :tag      => 'ossec::client',
       })
     end
+  end
+
+  it do
+    should contain_concat__fragment('ossec-agent.conf-repeated_offenders').with({
+      :target   => '/var/ossec/etc/ossec-agent.conf',
+      :content  => '',
+      :order    => '10',
+    })
+  end
+
+  it do
+    should contain_concat__fragment('ossec-agent.conf-close').with({
+      :target   => '/var/ossec/etc/ossec-agent.conf',
+      :content  => "</ossec_config>\n",
+      :order    => '99',
+    })
   end
 
   it do
@@ -72,6 +105,30 @@ describe 'ossec::client' do
       ]
 
       (content_stripped & expected_lines).should == expected_lines
+    end
+  end
+
+  context 'when repeated_offenders => [30,120,360,420,840]' do
+    let(:params) {{ :repeated_offenders => [30,120,360,420,840] }}
+
+    it do
+      should contain_concat__fragment('ossec-agent.conf-repeated_offenders').with({
+        :target   => '/var/ossec/etc/ossec-agent.conf',
+        :content  => "  <active-response>
+    <repeated_offenders>30,120,360,420,840</repeated_offenders>
+  </active-response>\n",
+        :order    => '10',
+      })
+    end
+  end
+
+  # Test validate_array parameters
+  [
+    'repeated_offenders',
+  ].each do |param|
+    context "with #{param} => 'foo'" do
+      let(:params) {{ param => 'foo' }}
+      it { expect { should create_class('ossec::client') }.to raise_error(Puppet::Error, /is not an Array/) }
     end
   end
 

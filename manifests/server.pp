@@ -80,15 +80,11 @@ class ossec::server (
     notify    => Service['ossec-hids'],
   }
 
-  @@file { '/var/ossec/etc/ossec-agent.conf':
-    ensure    => 'file',
-    owner     => 'root',
-    group     => 'root',
-    mode      => '0644',
-    content   => template('ossec/server/ossec-agent.conf.erb'),
-    require   => Package['ossec-hids-client'],
-    notify    => Service['ossec-hids'],
-    tag       => 'ossec::client',
+  @@concat::fragment { 'ossec-agent.conf-client':
+    target  => '/var/ossec/etc/ossec-agent.conf',
+    content => template('ossec/client/ossec-agent.conf-client.erb'),
+    order   => '01',
+    tag     => 'ossec::client',
   }
 
 }

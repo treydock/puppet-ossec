@@ -8,6 +8,7 @@ describe 'ossec::server' do
       :ipaddress_eth0 => '192.168.1.1',
       :network_eth0   => '192.168.1.0',
       :netmask_eth0   => '255.255.255.0',
+      :concat_basedir => '/dne',
     }
   end
 
@@ -68,6 +69,16 @@ describe 'ossec::server' do
     ]
 
     (content_stripped & expected_lines).should == expected_lines
+  end
+
+  it do
+    pending "no way to test exported resources" do
+      should contain_concat__fragment('ossec-agent.conf-client').with({
+        :target   => '/var/ossec/etc/ossec-agent.conf',
+        :order    => '01',
+        :tag      => 'ossec::client',
+      })
+    end
   end
 
   # Test validate_bool parameters
