@@ -23,4 +23,6 @@ class ossec::params {
     }
   }
 
+  $client_seed = fqdn_rand(65000, 'ossec')
+
 }

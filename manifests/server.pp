@@ -80,6 +80,16 @@ class ossec::server (
     notify    => Service['ossec-hids'],
   }
 
+  concat { '/var/ossec/etc/client.keys':
+    owner   => 'root',
+    group   => 'ossec',
+    mode    => '0440',
+    require => Package['ossec-hids-server'],
+    notify  => Service['ossec-hids'],
+  }
+
+  Ossec::Clientkey <<| |>>
+
   @@file { '/var/ossec/etc/ossec-agent.conf':
     ensure    => 'file',
     owner     => 'root',
