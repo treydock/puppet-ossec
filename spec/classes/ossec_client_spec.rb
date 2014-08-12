@@ -4,6 +4,7 @@ describe 'ossec::client' do
   let(:node) { 'bar.example.com' } 
   let :facts do
     {
+      :concat_basedir => '/dne',
       :osfamily       => 'RedHat',
       :concat_basedir => '/dne',
     }

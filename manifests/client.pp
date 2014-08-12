@@ -24,6 +24,26 @@ class ossec::client (
     }
   }
 
+  concat { '/var/ossec/etc/client.keys':
+    owner   => 'root',
+    group   => 'ossec',
+    mode    => '0440',
+    require => Package['ossec-hids-client'],
+    notify  => Service['ossec-hids'],
+  }
+
+  ossec::clientkey { "ossec_key_${::fqdn}_client":
+    client_id   => $::uniqueid,
+    client_name => $::fqdn,
+    client_ip   => $::ipaddress,
+  }
+
+  @@ossec::clientkey { "ossec_key_${::fqdn}_server":
+    client_id   => $::uniqueid,
+    client_name => $::fqdn,
+    client_ip   => $::ipaddress,
+  }
+
   package { 'ossec-hids-client':
     ensure  => 'present',
     name    => $package_name,
