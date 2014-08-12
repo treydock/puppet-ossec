@@ -7,6 +7,9 @@ describe 'ossec::client' do
       :concat_basedir => '/dne',
       :osfamily       => 'RedHat',
       :concat_basedir => '/dne',
+      :uniqueid       => 'foobar',
+      :fqdn           => 'foo.example.com',
+      :ipaddress      => '192.168.1.2',
     }
   end
 
@@ -15,16 +18,42 @@ describe 'ossec::client' do
   it { should contain_class('ossec') }
 
   it do
-    pending "no way to test collected resources" do
-      should contain_firewall('100 allow OSSEC server').with({
-        :ensure   => 'present',
-        :action   => 'accept',
-        :proto    => 'udp',
-        :dport    => '1514',
-        :iniface  => nil,
-        :source   => '192.168.1.1',
-      })
-    end        
+    skip("no way to test collected resources")
+    should contain_firewall('100 allow OSSEC server').with({
+      :ensure   => 'present',
+      :action   => 'accept',
+      :proto    => 'udp',
+      :dport    => '1514',
+      :iniface  => nil,
+      :source   => '192.168.1.1',
+    })
+  end
+
+  it do
+    should contain_concat('/var/ossec/etc/client.keys').with({
+      :owner    => 'root',
+      :group    => 'ossec',
+      :mode     => '0440',
+      :require  => 'Package[ossec-hids-client]',
+      :notify   => 'Service[ossec-hids]',
+    })
+  end
+
+  it do
+    should contain_ossec__clientkey('ossec_key_foo.example.com_client').with({
+      :client_id    => 'foobar',
+      :client_name  => 'foo.example.com',
+      :client_ip    => '192.168.1.2',
+    })
+  end
+
+  it do
+    skip("No way to test exported resources")
+    should contain_ossec__clientkey('ossec_key_foo.example.com_server').with({
+      :client_id    => 'foobar',
+      :client_name  => 'foo.example.com',
+      :client_ip    => '192.168.1.2',
+    })
   end
 
   it do
@@ -65,13 +94,12 @@ describe 'ossec::client' do
   end
 
   it do
-    pending "no way to test collected resources" do
-      should contain_concat__fragment('ossec-agent.conf-client').with({
-        :target   => '/var/ossec/etc/ossec-agent.conf',
-        :order    => '01',
-        :tag      => 'ossec::client',
-      })
-    end
+    skip("no way to test collected resources")
+    should contain_concat__fragment('ossec-agent.conf-client').with({
+      :target   => '/var/ossec/etc/ossec-agent.conf',
+      :order    => '01',
+      :tag      => 'ossec::client',
+    })
   end
 
   it do
@@ -91,22 +119,21 @@ describe 'ossec::client' do
   end
 
   it do
-    pending "no way to test collected resources" do
-      content = catalogue.resource('file', '/var/ossec/etc/ossec-agent.conf').send(:parameters)[:content]
-      content_stripped = content.split("\n").reject { |c| c =~ /(^<!--|^\s+<!--|^$)/ }
-    
-      expected_lines = [
-        '<ossec_config>',
-        '  <client>',
-        '    <server-ip>192.168.200.1</server-ip>',
-        '    <server-hostname>foo.example.com</server-hostname>',
-        '    <port>1514</port>',
-        '  </client>',
-        '</ossec_config>',
-      ]
+    skip("no way to test collected resources")
+    content = catalogue.resource('file', '/var/ossec/etc/ossec-agent.conf').send(:parameters)[:content]
+    content_stripped = content.split("\n").reject { |c| c =~ /(^<!--|^\s+<!--|^$)/ }
+  
+    expected_lines = [
+      '<ossec_config>',
+      '  <client>',
+      '    <server-ip>192.168.200.1</server-ip>',
+      '    <server-hostname>foo.example.com</server-hostname>',
+      '    <port>1514</port>',
+      '  </client>',
+      '</ossec_config>',
+    ]
 
-      (content_stripped & expected_lines).should == expected_lines
-    end
+    (content_stripped & expected_lines).should == expected_lines
   end
 
   context 'when repeated_offenders => [30,120,360,420,840]' do

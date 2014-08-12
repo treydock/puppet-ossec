@@ -1,9 +1,9 @@
 # == Class: ossec::server
 #
 class ossec::server (
-  $email_from             = "ossec@${::fqdn}",
+  $email_from             = $ossec::params::email_from,
   $email_notification     = true,
-  $email_to               = "root@${::domain}",
+  $email_to               = $ossec::params::email_to,
   $firewall_ensure        = 'present',
   $interface              = 'eth0',
   $manage_firewall        = true,

@@ -72,13 +72,22 @@ describe 'ossec::server' do
   end
 
   it do
-    pending "no way to test exported resources" do
-      should contain_concat__fragment('ossec-agent.conf-client').with({
-        :target   => '/var/ossec/etc/ossec-agent.conf',
-        :order    => '01',
-        :tag      => 'ossec::client',
-      })
-    end
+    skip("no way to test exported resources")
+    should contain_concat__fragment('ossec-agent.conf-client').with({
+      :target   => '/var/ossec/etc/ossec-agent.conf',
+      :order    => '01',
+      :tag      => 'ossec::client',
+    })
+  end
+
+  it do
+    should contain_concat('/var/ossec/etc/client.keys').with({
+      :owner    => 'root',
+      :group    => 'ossec',
+      :mode     => '0440',
+      :require  => 'Package[ossec-hids-server]',
+      :notify   => 'Service[ossec-hids]',
+    })
   end
 
   # Test validate_bool parameters

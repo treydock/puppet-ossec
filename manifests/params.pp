@@ -23,6 +23,8 @@ class ossec::params {
     }
   }
 
-  $client_seed = fqdn_rand(65000, 'ossec')
+  $client_seed  = fqdn_rand(65000, 'ossec')
+  $email_from   = "ossec@${::fqdn}"
+  $email_to     = "root@${::domain}"
 
 }
