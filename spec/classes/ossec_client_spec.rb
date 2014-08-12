@@ -44,6 +44,7 @@ describe 'ossec::client' do
       :client_id    => '80864820',
       :client_name  => 'foo.example.com',
       :client_ip    => '192.168.1.2',
+      :client_seed  => 'foobar',
     })
   end
 
@@ -53,6 +54,7 @@ describe 'ossec::client' do
       :client_id    => '80864820',
       :client_name  => 'foo.example.com',
       :client_ip    => '192.168.1.2',
+      :client_seed  => 'foobar',
     })
   end
 

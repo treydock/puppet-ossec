@@ -12,11 +12,12 @@ describe 'ossec::clientkey' do
       :client_id    => "80864820",
       :client_name  => "foo.example.com",
       :client_ip    => "192.168.1.3",
+      :client_seed  => "foobar",
     }
   end
 
-  let(:key1) { '87747bc021753281e41508e783771591' }
-  let(:key2) { '2587d242d0a618db0020a6e6c73f8c64' }
+  let(:key1) { 'a57106a7bd9d1c2431993d571b5b6753' }
+  let(:key2) { '3cc805a3ea6968adaf2c3adf9a0c28f0' }
 
   it do
     should contain_concat__fragment('ossec-client-key-192.168.1.3').with({

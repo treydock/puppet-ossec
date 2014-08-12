@@ -37,12 +37,14 @@ class ossec::client (
     client_id   => $client_id,
     client_name => $::fqdn,
     client_ip   => $::ipaddress,
+    client_seed => $::uniqueid,
   }
 
   @@ossec::clientkey { "ossec_key_${::fqdn}_server":
     client_id   => $client_id,
     client_name => $::fqdn,
     client_ip   => $::ipaddress,
+    client_seed => $::uniqueid,
   }
 
   package { 'ossec-hids-client':

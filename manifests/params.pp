@@ -24,7 +24,6 @@ class ossec::params {
   }
 
   $client_id    = fqdn_rand(99999999, 'ossec')
-  $client_seed  = $::uniqueid
   $email_from   = "ossec@${::fqdn}"
   $email_to     = "root@${::domain}"
 

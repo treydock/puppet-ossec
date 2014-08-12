@@ -3,19 +3,11 @@ define ossec::clientkey (
   $client_id,
   $client_name,
   $client_ip,
-  $client_seed = 'UNSET',
+  $client_seed,
 ) {
 
-  include ossec::params
-
-  if $client_seed == 'UNSET' {
-    $client_seed_real = $ossec::params::client_seed
-  } else {
-    $client_seed_real = $client_seed
-  }
-
-  $key1 = md5("${client_id} ${client_seed_real}")
-  $key2 = md5("${client_name} ${client_ip} ${client_seed_real}")
+  $key1 = md5("${client_id} ${client_seed}")
+  $key2 = md5("${client_name} ${client_ip} ${client_seed}")
 
   concat::fragment { "ossec-client-key-${client_ip}":
     ensure  => 'present',
