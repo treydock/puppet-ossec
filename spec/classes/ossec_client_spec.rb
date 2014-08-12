@@ -41,7 +41,7 @@ describe 'ossec::client' do
 
   it do
     should contain_ossec__clientkey('ossec_key_foo.example.com_client').with({
-      :client_id    => 'foobar',
+      :client_id    => '80864820',
       :client_name  => 'foo.example.com',
       :client_ip    => '192.168.1.2',
     })
@@ -50,7 +50,7 @@ describe 'ossec::client' do
   it do
     skip("No way to test exported resources")
     should contain_ossec__clientkey('ossec_key_foo.example.com_server').with({
-      :client_id    => 'foobar',
+      :client_id    => '80864820',
       :client_name  => 'foo.example.com',
       :client_ip    => '192.168.1.2',
     })
