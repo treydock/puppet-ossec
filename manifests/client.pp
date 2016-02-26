@@ -2,6 +2,7 @@
 #
 class ossec::client (
   $client_id          = $ossec::params::client_id,
+  $client_ip          = $::ipaddress,
   $repeated_offenders = [],
   $firewall_ensure    = 'present',
   $manage_firewall    = true,
@@ -36,14 +37,14 @@ class ossec::client (
   ossec::clientkey { "ossec_key_${::fqdn}_client":
     client_id   => $client_id,
     client_name => $::fqdn,
-    client_ip   => $::ipaddress,
+    client_ip   => $client_ip,
     client_seed => $::uniqueid,
   }
 
   @@ossec::clientkey { "ossec_key_${::fqdn}_server":
     client_id   => $client_id,
     client_name => $::fqdn,
-    client_ip   => $::ipaddress,
+    client_ip   => $client_ip,
     client_seed => $::uniqueid,
   }
 
